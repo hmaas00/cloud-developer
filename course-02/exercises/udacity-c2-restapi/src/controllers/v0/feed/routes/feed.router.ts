@@ -35,8 +35,8 @@ router.get("/:id",
             res.status(400).send("item not found");
         }
 
-        res.status(200)
-        .send(`${item.url}\n${item.caption}\n${item.createdAt}\n${item.updatedAt}`);
+        res.status(200).send(item.toJSON());
+        //.send(`${item.url}\n${item.caption}\n${item.createdAt}\n${item.updatedAt}`);
 
     });
 
@@ -45,7 +45,23 @@ router.patch('/:id',
     requireAuth, 
     async (req: Request, res: Response) => {
         //@TODO try it yourself
-        res.send(500).send("not implemented")
+        try{
+            const {id} = req.params;
+            const item = await FeedItem.findByPk(id);
+
+            const {caption, url} = req.body;
+
+            item.caption = caption;
+            item.url = url;
+
+            await item.save();
+
+            res.status(200).send(item.toJSON());
+        }
+        catch(err){
+            res.status(400).send("error: " + err.message);
+        }
+        
 });
 
 
