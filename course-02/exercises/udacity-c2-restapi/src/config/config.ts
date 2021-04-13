@@ -15,6 +15,9 @@ export const config = {
     "database": process.env.PROD_DATABASE,
     "host": process.env.PROD_HOST,
     "dialect": "postgres"
+  },
+  "jwt": {
+    "secret": "helloworld"
   }
 }
 //DB instance identifier:database-udagram-dev

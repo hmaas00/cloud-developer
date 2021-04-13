@@ -8,21 +8,34 @@ import { NextFunction } from 'connect';
 
 import * as EmailValidator from 'email-validator';
 
+import { config } from '../../../../config/config';
+
+
 const router: Router = Router();
 
 async function generatePassword(plainTextPassword: string): Promise<string> {
     //@TODO Use Bcrypt to Generated Salted Hashed Passwords
-    return "NotYetImplemented"
+
+    const saltRounds = 5;
+
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    const h = await bcrypt.hash(plainTextPassword, salt);
+        
+
+    return h;
 }
 
 async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
     //@TODO Use Bcrypt to Compare your password to your Salted Hashed Password
-    return true
+
+
+    return await bcrypt.compare(plainTextPassword,hash);
 }
 
 function generateJWT(user: User): string {
     //@TODO Use jwt to create a new JWT Payload containing
-    return "NotYetImplemented"
+    return jwt.sign(user.toJSON(), config.jwt.secret);
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
