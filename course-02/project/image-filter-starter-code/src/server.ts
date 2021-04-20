@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles, clearPath} from './util/util';
+import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
 (async () => {
 
@@ -42,7 +42,12 @@ import {filterImageFromURL, deleteLocalFiles, clearPath} from './util/util';
       const localFilePath:string = await filterImageFromURL(url).catch((e)=>{throw e;});
 
       res.status(200).sendFile(localFilePath);
-      await clearPath("util/temp");
+      console.log("this file path: " + localFilePath);
+
+      setTimeout(() => {
+        deleteLocalFiles([localFilePath]);  
+      }, 1000*30); // can be longer
+      
       
     }
     catch(err){

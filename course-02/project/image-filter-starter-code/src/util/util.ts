@@ -38,16 +38,3 @@ export async function deleteLocalFiles(files:Array<string>){
     }
 }
 
-export async function clearPath(filesPath:fs.PathLike){
-
-    let filesToDel:Array<string> = [];
-    await fs.readdir(filesPath,(err,files)=> {
-        files.forEach(file => {
-            console.log("deleting" + file);
-        });
-        
-        filesToDel = files;
-    });
-    await deleteLocalFiles(filesToDel);
-    console.log("done");
-}
