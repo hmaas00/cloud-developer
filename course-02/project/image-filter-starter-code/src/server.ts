@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {filterImageFromURL, deleteLocalFiles, clearPath} from './util/util';
 
 (async () => {
 
@@ -35,17 +35,18 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     const url:string = req.query.image_url;
 
     if (!url){
-      res.status(400).send("bad request");
+      res.status(400).send("bad request use this route: /filteredimage?image_url=your_url");
     }
 
     try {
-      const localFilePath:string = await filterImageFromURL(url);
+      const localFilePath:string = await filterImageFromURL(url).catch((e)=>{throw e;});
 
-      res.status(200).send("ok, path:" + localFilePath);
+      res.status(200).sendFile(localFilePath);
+      await clearPath("util/temp");
       
     }
     catch(err){
-      res.status(500).send("internal error");
+      res.status(400).send("bad url!");
     }
 
     
